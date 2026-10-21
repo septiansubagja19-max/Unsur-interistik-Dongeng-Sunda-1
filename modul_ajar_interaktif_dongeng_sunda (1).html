@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="su" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modul Ajar Interaktif Unsur Intrinsik Dongeng Sunda</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            sunda: {
+              50: '#f2f9f1',
+              100: '#e1f2df',
+              200: '#c4e5c2',
+              300: '#99d298',
+              400: '#68b767',
+              500: '#469b46',
+              600: '#347c35',
+              700: '#2c622d',
+              800: '#264e27',
+              900: '#204122',
+            },
+            amberCustom: {
+              400: '#f59e0b',
+              500: '#d97706',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    .page-step {
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    }
+
+    .page-step.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .pattern-bg {
+      background-color: #f8fafb;
+      background-image: radial-gradient(#2c622d 0.55px, transparent 0.55px), radial-gradient(#2c622d 0.55px, #f8fafb 0.55px);
+      background-size: 22px 22px;
+      background-position: 0 0, 11px 11px;
+    }
+  </style>
+</head>
+<body class="h-full font-sans text-slate-800 bg-slate-100 flex flex-col min-h-screen">
+
+  <!-- TOP HEADER / NAVBAR -->
+  <header class="bg-sunda-800 text-white shadow-md sticky top-0 z-40">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="bg-sunda-600 p-2 rounded-xl text-amber-300 flex items-center justify-center w-10 h-10 shadow-inner">
+          <i class="fa-solid fa-book-open-reader text-lg"></i>
+        </div>
+        <div>
+          <h1 class="font-display font-bold text-base sm:text-lg leading-tight text-amber-100">Modul Interaktif Sunda</h1>
+          <p class="text-xs text-sunda-200 hidden sm:block">Unsur Intrinsik Dongeng Sunda</p>
+        </div>
+      </div>
+
+      <!-- Student Badge in Header (Hidden until identity is filled) -->
+      <div id="header-student-badge" class="hidden items-center bg-sunda-900/70 border border-sunda-600/60 rounded-full px-3 py-1 text-xs text-sunda-100">
+        <i class="fa-solid fa-user-graduate text-amber-400 mr-2"></i>
+        <span id="badge-student-name" class="font-semibold mr-2 max-w-[120px] truncate">---</span>
+        <span class="bg-sunda-600 px-2 py-0.5 rounded-full text-[10px] text-white font-bold" id="badge-student-class">---</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 md:p-8">
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed top-16 right-4 z-50 transform translate-y-[-20px] opacity-0 transition-all duration-300 pointer-events-none max-w-sm bg-slate-900 text-white text-sm px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3">
+      <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+      <span id="toast-message">Pesen béwara...</span>
+    </div>
+
+    <!-- ==========================================
+         HALAMAN 1: DATA DIRI MURID
+         ========================================== -->
+    <section id="step-identity" class="page-step active max-w-md mx-auto">
+      <div class="bg-white rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden">
+        <div class="bg-sunda-700 px-6 py-8 text-center text-white relative">
+          <div class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-amber-400 text-sunda-900 w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg text-xl font-bold">
+            <i class="fa-solid fa-id-card"></i>
+          </div>
+          <h2 class="font-display text-2xl font-bold text-amber-100">Data Diri Murid</h2>
+          <p class="text-sunda-200 text-xs sm:text-sm mt-1">Eusian data di handap sateuacan ngawitan pangajaran.</p>
+        </div>
+
+        <form id="form-identity" onsubmit="handleIdentitySubmit(event)" class="p-6 sm:p-8 pt-10 space-y-5">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-2" for="input-name">
+              <i class="fa-solid fa-user mr-1 text-sunda-600"></i> Wasta Lengkep (Nama Lengkap) *
+            </label>
+            <input type="text" id="input-name" required placeholder="Conto: Ahmad Fauzi"
+              class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-sunda-500 focus:border-sunda-500 outline-none transition text-sm font-medium bg-slate-50 focus:bg-white" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-2" for="input-class">
+                <i class="fa-solid fa-school mr-1 text-sunda-600"></i> Kelas *
+              </label>
+              <input type="text" id="input-class" required placeholder="Conto: 7-A / 8-B"
+                class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-sunda-500 focus:border-sunda-500 outline-none transition text-sm font-medium bg-slate-50 focus:bg-white" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-2" for="input-absent">
+                <i class="fa-solid fa-list-ol mr-1 text-sunda-600"></i> Nomer Absen *
+              </label>
+              <input type="number" id="input-absent" required min="1" max="100" placeholder="Conto: 12"
+                class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-sunda-500 focus:border-sunda-500 outline-none transition text-sm font-medium bg-slate-50 focus:bg-white" />
+            </div>
+          </div>
+
+          <button type="submit"
+            class="w-full mt-4 bg-sunda-600 hover:bg-sunda-700 text-white font-display font-bold py-3.5 px-6 rounded-xl shadow-lg hover:shadow-xl transition duration-200 flex items-center justify-center space-x-2 group">
+            <span>Lajengkeun ➡️</span>
+            <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         HALAMAN 2: HALAMAN AWAL (SAMPUL)
+         ========================================== -->
+    <section id="step-cover" class="page-step max-w-2xl mx-auto text-center">
+      <div class="bg-white rounded-3xl shadow-xl border border-slate-200/80 p-8 sm:p-12 relative overflow-hidden pattern-bg">
+        <div class="inline-block bg-sunda-100 border border-sunda-200 text-sunda-800 text-xs font-bold px-4 py-1.5 rounded-full mb-6 uppercase tracking-widest shadow-sm">
+          🍃 Modul Ajar Basa Sunda Interaktif
+        </div>
+
+        <div class="w-24 h-24 bg-gradient-to-tr from-sunda-600 to-amber-500 rounded-3xl mx-auto flex items-center justify-center text-white text-4xl shadow-xl shadow-sunda-600/20 mb-6 transform rotate-3 hover:rotate-0 transition duration-300">
+          <i class="fa-solid fa-feather-pointed"></i>
+        </div>
+
+        <h1 class="font-display font-extrabold text-2xl sm:text-4xl text-sunda-900 leading-tight mb-4">
+          HAYU URANG NGANALISIS UNSUR INTRINSIK DONGENG SUNDA
+        </h1>
+
+        <p class="text-slate-600 text-sm sm:text-base max-w-lg mx-auto mb-8 leading-relaxed">
+          Wilujeng sumping dina modul pangajaran interaktif. Hayu urang baca carita dongeng nu pikaresepeun sarta nalungtik unsur-unsur intrinsik di jerona!
+        </p>
+
+        <div class="space-y-3 sm:space-y-0 sm:flex sm:justify-center sm:space-x-4">
+          <button onclick="navigateToStep('step-tepas')"
+            class="w-full sm:w-auto bg-sunda-600 hover:bg-sunda-700 text-white font-display font-bold py-4 px-8 rounded-2xl shadow-lg hover:shadow-sunda-600/30 transition duration-200 flex items-center justify-center space-x-3 text-base group">
+            <span>Lebet ka Tepas (Beranda) ➡️</span>
+            <i class="fa-solid fa-circle-arrow-right text-amber-300 text-lg group-hover:translate-x-1 transition-transform"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         HALAMAN 3: TEPAS (BERANDA MENU DONGENG)
+         ========================================== -->
+    <section id="step-tepas" class="page-step space-y-6">
+      
+      <!-- Greeting Banner -->
+      <div class="bg-gradient-to-r from-sunda-800 to-sunda-700 rounded-2xl p-6 text-white shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <div class="text-xs uppercase font-semibold text-amber-300 tracking-wider mb-1">🏠 TEPAS UTAMA</div>
+          <h2 class="font-display font-bold text-xl sm:text-2xl">
+            Wilujeng Sumping, <span id="tepas-student-name" class="text-amber-300">Murid</span>!
+          </h2>
+          <p class="text-sunda-100 text-xs sm:text-sm mt-1">
+            Kelas: <span id="tepas-student-class" class="font-semibold text-white">---</span> | Silahkeun pilih salah sahiji dongeng di handap pikeun dibaca sarta dianalisis.
+          </p>
+        </div>
+        <button onclick="navigateToStep('step-identity')" class="text-xs bg-sunda-900/60 hover:bg-sunda-900 text-sunda-200 hover:text-white px-3 py-2 rounded-lg border border-sunda-600 transition flex items-center gap-2 whitespace-nowrap">
+          <i class="fa-solid fa-user-pen"></i> Ganti Data Diri
+        </button>
+      </div>
+
+      <!-- Categories Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- 1. FABEL -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition overflow-hidden">
+          <div class="bg-emerald-50 border-b border-emerald-100 p-4 flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-lg font-bold shadow-sm">
+              🦊
+            </div>
+            <div>
+              <h3 class="font-display font-bold text-slate-800 text-base">1. Fabel</h3>
+              <p class="text-xs text-slate-500">Dongeng nu palakuna sato / hewan kalawan paripolah saperti jalma.</p>
+            </div>
+          </div>
+          <div class="p-4 space-y-2">
+            <button onclick="selectStory('fabel-1')" class="w-full text-left p-3 rounded-xl border border-slate-100 hover:border-emerald-300 hover:bg-emerald-50/50 transition flex items-center justify-between group">
+              <span class="font-medium text-sm text-slate-700 group-hover:text-emerald-800">Peucang jeung Maung</span>
+              <i class="fa-solid fa-chevron-right text-xs text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-1 transition-all"></i>
+            </button>
+            <button onclick="selectStory('fabel-2')" class="w-full text-left p-3 rounded-xl border border-slate-100 hover:border-emerald-300 hover:bg-emerald-50/50 transition flex items-center justify-between group">
+              <span class="font-medium text-sm text-slate-700 group-hover:text-emerald-800">Kuya jeung Monyet</span>
+              <i class="fa-solid fa-chevron-right text-xs text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-1 transition-all"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. PARABEL -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition overflow-hidden">
+          <div class="bg-amber-50 border-b border-amber-100 p-4 flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-600 text-white flex items-center justify-center text-lg font-bold shadow-sm">
+              👤
+            </div>
+            <div>
+              <h3 class="font-display font-bold text-slate-800 text-base">2. Parabel</h3>
+              <p class="text-xs text-slate-500">Dongeng ngeunaan jalma biasa nu ngandung lulucon atawa piwuruk.</p>
+            </div>
+          </div>
+          <div class="p-4 space-y-2">
+            <button onclick="selectStory('parabel-1')" class="w-full text-left p-3 rounded-xl border border-slate-100 hover:border-amber-300 hover:bg-amber-50/50 transition flex items-center justify-between group">
+              <span class="font-medium text-sm text-slate-700 group-hover:text-amber-800">Si Kabayan Ngala Tutut</span>
+              <i class="fa-solid fa-chevron-right text-xs text-slate-400 group-hover:text-amber-600 group-hover:translate-x-1 transition-all"></i>
+            </button>
+            <button onclick="selectStory('parabel-2')" class="w-full text-left p-3 rounded-xl border border-slate-100 hover:border-amber-300 hover:bg-amber-50/50 transition flex items-center justify-between group">
+              <span class="font-medium text-sm text-slate-700 group-hover:text-amber-800">Si Kabayan jeung Iteung</span>
+              <i class="fa-solid fa-chevron-right text-xs text-slate-400 group-hover:text-amber-600 group-hover:translate-x-1 transition-all"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. SASAKALA -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition overflow-hidden">
+          <div class="bg-sky-50 border-b border-sky-100 p-4 flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-sky-600 text-white flex items-center justify-center text-lg font-bold shadow-sm">
+              ⛰️
+            </div>
+            <div>
+              <h3 class="font-display font-bold text-slate-800 text-base">3. Sasakala</h3>
+              <p class="text-xs text-slate-500">Dongeng nu menceritakan asal-usul hiji tempat, barang, atawa sasatoan.</p>
+            </div>
+          </div>
+          <div class="p-4 space-y-2">
+            <button onclick="selectStory('sasakala-1')" class="w-full text-left p-3 rounded-xl border border-slate-100 hover:border-sky-300 hover:bg-sky-50/50 transition flex items-center justify-between group">
+              <span class="font-medium text-sm text-slate-700 group-hover:text-sky-800">Sasakala Munding jeung Oray Totog</span>
+              <i class="fa-solid fa-chevron-right text-xs text-slate-400 group-hover:text-sky-600 group-hover:translate-x-1 transition-all"></i>
+            </button>
+            <button onclick="selectStory('sasakala-2')" class="w-full text-left p-3 rounded-xl border border-slate-100 hover:border-sky-300 hover:bg-sky-50/50 transition flex items-center justify-between group">
+              <span class="font-medium text-sm text-slate-700 group-hover:text-sky-800">Sasakala Pare</span>
+              <i class="fa-solid fa-chevron-right text-xs text-slate-400 group-hover:text-sky-600 group-hover:translate-x-1 transition-all"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4. MITE -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition overflow-hidden">
+          <div class="bg-purple-50 border-b border-purple-100 p-4 flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center text-lg font-bold shadow-sm">
+              👻
+            </div>
+            <div>
+              <h3 class="font-display font-bold text-slate-800 text-base">4. Mite</h3>
+              <p class="text-xs text-slate-500">Dongeng nu patali jeung hal-hal gaib, dewa-dewi, atawa kapercayaan suci.</p>
+            </div>
+          </div>
+          <div class="p-4 space-y-2">
+            <button onclick="selectStory('mite-1')" class="w-full text-left p-3 rounded-xl border border-slate-100 hover:border-purple-300 hover:bg-purple-50/50 transition flex items-center justify-between group">
+              <span class="font-medium text-sm text-slate-700 group-hover:text-purple-800">Nyi Roro Kidul</span>
+              <i class="fa-solid fa-chevron-right text-xs text-slate-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all"></i>
+            </button>
+            <button onclick="selectStory('mite-2')" class="w-full text-left p-3 rounded-xl border border-slate-100 hover:border-purple-300 hover:bg-purple-50/50 transition flex items-center justify-between group">
+              <span class="font-medium text-sm text-slate-700 group-hover:text-purple-800">Sanekala</span>
+              <i class="fa-solid fa-chevron-right text-xs text-slate-400 group-hover:text-purple-600 group-hover:translate-x-1 transition-all"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- 5. SAGE -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition overflow-hidden md:col-span-2">
+          <div class="bg-rose-50 border-b border-rose-100 p-4 flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center text-lg font-bold shadow-sm">
+              👑
+            </div>
+            <div>
+              <h3 class="font-display font-bold text-slate-800 text-base">5. Sage</h3>
+              <p class="text-xs text-slate-500">Dongeng nu ngandung unsur sajarah ngeunaan pahlawan atawa tokoh sakti.</p>
+            </div>
+          </div>
+          <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-2">
+            <button onclick="selectStory('sage-1')" class="w-full text-left p-3 rounded-xl border border-slate-100 hover:border-rose-300 hover:bg-rose-50/50 transition flex items-center justify-between group">
+              <span class="font-medium text-sm text-slate-700 group-hover:text-rose-800">Prabu Siliwangi</span>
+              <i class="fa-solid fa-chevron-right text-xs text-slate-400 group-hover:text-rose-600 group-hover:translate-x-1 transition-all"></i>
+            </button>
+            <button onclick="selectStory('sage-2')" class="w-full text-left p-3 rounded-xl border border-slate-100 hover:border-rose-300 hover:bg-rose-50/50 transition flex items-center justify-between group">
+              <span class="font-medium text-sm text-slate-700 group-hover:text-rose-800">Kean Santang</span>
+              <i class="fa-solid fa-chevron-right text-xs text-slate-400 group-hover:text-rose-600 group-hover:translate-x-1 transition-all"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         HALAMAN 4: WACANA DONGENG & GOOGLE FORM LINK
+         ========================================== -->
+    <section id="step-story" class="page-step space-y-6">
+      
+      <!-- Top Prominent Navigation Back Button -->
+      <div class="flex flex-wrap items-center justify-between gap-3 bg-sunda-800 text-white p-4 rounded-2xl shadow-md">
+        <button onclick="navigateToStep('step-tepas')" class="bg-amber-400 hover:bg-amber-500 text-sunda-950 font-bold px-5 py-2.5 rounded-xl text-sm transition flex items-center gap-2 shadow-sm">
+          <i class="fa-solid fa-house text-base"></i>
+          <span>🏠 Balik Deui ka Tepas</span>
+        </button>
+
+        <div class="flex items-center space-x-2 bg-sunda-900/60 px-3 py-1.5 rounded-xl border border-sunda-700">
+          <span class="text-xs text-sunda-200 font-medium">Ukuran Aksara:</span>
+          <button onclick="changeFontSize(-1)" class="w-7 h-7 rounded-lg bg-sunda-700 hover:bg-sunda-600 text-amber-300 flex items-center justify-center text-xs font-bold transition" title="Kecilkan Teks">A-</button>
+          <button onclick="changeFontSize(1)" class="w-7 h-7 rounded-lg bg-sunda-700 hover:bg-sunda-600 text-amber-300 flex items-center justify-center text-xs font-bold transition" title="Besarkan Teks">A+</button>
+        </div>
+      </div>
+
+      <!-- Story Container Card -->
+      <div class="bg-white rounded-3xl shadow-xl border border-slate-200/80 overflow-hidden">
+        
+        <!-- Story Header -->
+        <div class="bg-sunda-700 px-6 py-6 text-white border-b border-sunda-800 flex flex-col md:flex-row md:items-center justify-between gap-2">
+          <div>
+            <span id="story-badge-type" class="text-[10px] uppercase font-bold tracking-widest px-3 py-1 bg-amber-400 text-sunda-950 rounded-md">
+              Fabel
+            </span>
+            <h2 id="story-display-title" class="font-display text-2xl sm:text-3xl font-bold text-amber-100 mt-2">
+              Judul Dongeng
+            </h2>
+          </div>
+          <div class="text-xs text-sunda-200 flex items-center gap-2">
+            <i class="fa-solid fa-book-open text-amber-400"></i> Baca kalawan taliti!
+          </div>
+        </div>
+
+        <!-- Story Text Content -->
+        <div id="story-body-content" class="p-6 sm:p-10 text-slate-800 leading-relaxed text-base sm:text-lg space-y-4 font-sans bg-amber-50/20">
+          <!-- Text loaded dynamically via JS -->
+        </div>
+
+        <!-- Guidance Box for Unsur Intrinsik -->
+        <div class="mx-6 mb-6 p-5 bg-sunda-50 rounded-2xl border border-sunda-200 space-y-2">
+          <h4 class="font-display font-bold text-sunda-900 text-sm flex items-center gap-2">
+            <i class="fa-solid fa-magnifying-glass text-sunda-600"></i>
+            <span>Pituduh Unsur Intrinsik nu Kudu Dianalisis dina Google Form:</span>
+          </h4>
+          <ul class="text-xs text-sunda-800 space-y-1.5 list-disc list-inside pl-1">
+            <li><strong>Téma:</strong> Ideu poko atawa masalah utama carita.</li>
+            <li><strong>Palaku & Watak:</strong> Tokoh-tokoh carita jeung pasipatan/karakterna.</li>
+            <li><strong>Latar:</strong> Latar Tempat, Latar Waktu, jeung Latar Suasana.</li>
+            <li><strong>Galur:</strong> Jalanna carita (Maju, Mundur, atawa Campuran).</li>
+            <li><strong>Amanat:</strong> Pesen moral atawa piwuruk nu tiasa dipetik ti ieu dongeng.</li>
+          </ul>
+        </div>
+
+        <!-- Bottom Action Box with Google Form Integration -->
+        <div class="p-6 bg-slate-50 border-t border-slate-200 text-center space-y-4">
+          <div class="max-w-md mx-auto space-y-3">
+            
+            <!-- GOOGLE FORM MAIN BUTTON -->
+            <a href="https://forms.gle/W5uSbxa4LwSTiMHA7" target="_blank" rel="noopener noreferrer"
+              class="w-full bg-gradient-to-r from-sunda-600 to-sunda-700 hover:from-sunda-700 hover:to-sunda-800 text-white font-display font-bold py-4 px-6 rounded-2xl shadow-xl hover:shadow-sunda-600/30 transition duration-200 flex items-center justify-center space-x-3 group text-base sm:text-lg">
+              <i class="fa-solid fa-file-pen text-amber-300 text-xl group-hover:scale-110 transition-transform"></i>
+              <span>📝 Buka / Eusian Lembar Kerja (Google Form)</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-xs text-amber-200 opacity-80"></i>
+            </a>
+
+            <p class="text-xs text-slate-500">
+              *Klik tombol di luhur pikeun muka Google Form dina tab anyar tur ngirimkeun hasil analisis unsur intrinsik ka Guru.
+            </p>
+          </div>
+
+          <div class="pt-2 border-t border-slate-200/80 flex justify-center">
+            <button onclick="navigateToStep('step-tepas')" class="text-sunda-700 hover:text-sunda-900 font-bold text-xs flex items-center gap-2">
+              <i class="fa-solid fa-rotate-left"></i> Nganalisis Dongeng Sanesna (Balik ka Tepas)
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 mt-auto">
+    <div class="max-w-4xl mx-auto px-4">
+      <p class="font-semibold text-slate-700">Modul Ajar Interaktif Basa Sunda &copy; 2026</p>
+      <p class="mt-1 text-slate-400">Materi Unsur Intrinsik Dongeng Sunda | Terintegrasi Google Forms</p>
+    </div>
+  </footer>
+
+  <!-- ==========================================
+       JAVASCRIPT LOGIC & DATABASE DONGENG SUNDA
+       ========================================== -->
+  <script>
+    // --- DATABASE STORIES (10 DONGENG SUNDA LENGKEP) ---
+    const STORIES_DATABASE = {
+      'fabel-1': {
+        title: "Peucang jeung Maung",
+        type: "Fabel",
+        content: `
+          <p>Dina hiji poé, Peucang keur leumpang di leuweung anu hieum. Manehna ngarasa lapar pisan sabab ti isuk can manggihan dahareun. Nalika keur nyukcruk jalan, dadakakan kaluar Maung anu galak ti balik rungkun.</p>
+          <p>"Haha! Kabeneran pisan gumpalan daging leutik! Maneh baris jadi sarapan kuring poe ieu!" ceuk Maung bari ngagaum serem.</p>
+          <p>Peucang kacida reuwasna, tapi manehna tetep tenang sarta muter otakna pikeun nyalametkeun diri. Panonna ningali aya telek (kotoran) kebo anu geus garing tur ngabentuk buledan gedé di gigireunana.</p>
+          <p>"Aduh Maung, ulah waka ngadahar kuring! Kuring keur ditugaskeun ku Kanjeng Raja pikeun ngajaga sabuk karajaan nu kacida sakti jeung éndahna ieu," ceuk Peucang kalawan gaya tenang sarta hormat.</p>
+          <p>Maung nu sarakah jadi penasaran. "Hah? Sabuk Raja? Mana sabukna?"</p>
+          <p>"Tuh nu ngagolepak di dinya! Saha wae nu make eta sabuk, manehna bakal jadi raja di ieu leuweung," bohong Peucang. Maung gancang nyampeurkeun sarta ngarampa kotoran kebo tea. Ku sabab sarakah hayang jadi raja leuweung, Maung langsung ngabeulitkeun kotoran eta kana awakna. Ambu bau jeung geuleuh langsung ngeusian irung Maung.</p>
+          <p>Samentara Maung keur ngambek ku sabab katipu, Peucang geus lumpat tarik pisan nyalametkeun dirina.</p>
+        `
+      },
+      'fabel-2': {
+        title: "Kuya jeung Monyet",
+        type: "Fabel",
+        content: `
+          <p>Sakali wektu, Sakadang Kuya jeung Sakadang Monyet ngajalin babatangan. Maranehna alcik melak tangkal cau di kebon. Sakadang Kuya melak anak tangkal cau nu aya akaran, sedengkeun Sakadang Monyet nu licik kalah melak pucuk cauna sabab mikir bakal gancang buahan.</p>
+          <p>Sababaraha bulan ti harita, tangkal cau Sakadang Kuya tumuwuh subur tur buahan lebat pisan. Sabalikna, tangkal cau Sakadang Monyet mah bener-bener ropoh tur buruk.</p>
+          <p>Sakadang Kuya teu bisa naek tangkal cau nu geus asak eta. Manehna minta tulung ka Sakadang Monyet. "Sakadang Monyet, tulung pangalakeun cau kuring, engke urang bagi dua."</p>
+          <p>Sakadang Monyet nu hawek ngajawab, "Hayu!" Manehna gancang naek ka luhur tangkal. Tapi nalika geus di luhur, cau eta malah didahar ku sorangan kalawan lahap pisan. Cangkangna hungkul nu dibuang ka handap ngenaan Sakadang Kuya.</p>
+          <p>Sakadang Kuya ngarasa nyeri hate tapi tetep tenang. Manehna neangan akal pikeun ngawulang Monyet nu hawek. "Sakadang Monyet, mun dahar cau di luhur mah kurang nikmat! Mun hayang leuwih nikmat, maneh kudu ngaluncat ka rungkun nu rungkup di handap bari meureumkeun panon!"</p>
+
+          <p>Monyet nu beuki sarakah tur bodo langsung percaya. Manehna peureum tuluy ngaluncat. Tapi hoream, rungkun eta téh nyaéta rungkun salak nu pinuh ku cucuk seukeut. Monyet ngajerit kanyataan ku sabab awakna katurubkeun cucuk salak.</p>
+        `
+      },
+      'parabel-1': {
+        title: "Si Kabayan Ngala Tutut",
+        type: "Parabel",
+        content: `
+          <p>Dina hiji poé, Si Kabayan dititah ku mitohana ngala tutut di sawah. Mitohana geus hayangeun pisan dahar sangsa tutut nu ngeunah. Si Kabayan leumpang ka sawah mawa wadah tutut.</p>
+          <p>Sadatengna ka sawah, Si Kabayan nengjo cai sawah nu herang pisan. Kulantaran herang, kalangkang langit, awan, jeung tangkal kalapa kaeunteungkeun dibeungeut cai sawah eta.</p>
+          <p>Si Kabayan ngajerit dumeh mikir yen sawah teh jero pisan. "Aduh, jero pisan ieu sawah! Apan langitna ge kelihatan di jero cai. Moal sanggup kuring mah nyilemna, bisa kelep!" ceuk Si Kabayan bari diuk di galengan sawah.</p>
+          <p>Salila sababaraha jam Si Kabayan ngan saukur diuk bari nyalukan tutut ti galengan. "Tutut... ka dieu leumpang ku sorangan, tong jero-jero!" Mitohana nu nunggu di imah geus lapar tur heran naha Si Kabayan teu balik-balik.</p>
+          <p>Panasaran, mitohana nyampeurkeun ka sawah. Mitohana kaget nengjo Si Kabayan ngan diuk gogowokan ka sawah. "Naha maneh teu ngala tutut, Kabayan?"</p>
+          <p>"Apan sawahna jero pisan Ama! Tuh tingali langit ge katingali di handap!" jawab Kabayan.</p>
+          <p>Mitohana nu gemes langsung nyuntrungkeun Si Kabayan ka tengah sawah. Si Kabayan reuwas, tapi gancang sadar yen cai sawah teh ngan saukur semet kempolna (dengkulna).</p>
+        `
+      },
+      'parabel-2': {
+        title: "Si Kabayan jeung Iteung",
+        type: "Parabel",
+        content: `
+          <p>Si Kabayan dipikawanoh salaku jalma nu kedul tapi pinter ngaleungitkeun masalah ku akal cerdikna. Hiji poe, Nyi Iteung pamatana, nitah Si Kabayan neangan suluh (kayu bakar) ka leuweung sabab hawu di dapur geus pareum.</p>
+          <p>Si Kabayan indit ka leuweung bari ngahariring. Tapi tinimbang nuar dahan garing, manehna kalah sare di handap tangkal kiara nu iyuh. Waktu geus sore, Si Kabayan hudang tur reuwas nyaho can meunang suluh hiji-hiji acan.</p>
+          <p>Manehna ningali tangkal cau garing di gigireunana. Si Kabayan teu kurang akal. Manehna nyeret tangkal cau eta balik ka imah.</p>
+          <p>Datang ka imah, Nyi Iteung jeung Mitohana ngambek. "Kabayan! Naha ngabawa tangkal cau buruk? Ieu mah moal bisa dijadikeun suluh ku hawu!"</p>
+          <p>Si Kabayan ngajawab kalawan tenang, "Aduhh Iteung... ulah waka ngambek! Ieu teh dahan ajaib. Lamun diduruk moal ngahasilkeun haseup nu ngajadikeun panon peureus. Cobaan wae heula!" Saenggeus mitohana nyobian sarta tetep teu bisa hurung, Si Kabayan geus kabur salat lebet ka kamar sarta purak-purak sare nyenyep.</p>
+        `
+      },
+      'sasakala-1': {
+        title: "Sasakala Munding jeung Oray Totog",
+        type: "Sasakala",
+        content: `
+          <p>Jaman baheula, aya carita ngeunaan Oray Totog jeung Munding (Kebo). Harita, Oray Totog boga panon anu awas tur seukeut pisan peningalina, tapi manehna teu boga tanduk. Sabalikna, Munding boga tanduk nu gagah tur indah, tapi panonna lamur tur teu jelas nempo.</p>
+          <p>Hiji poe, Oray Totog nyampeurkeun Munding nu keur macul di sawah. "Harua Sakadang Munding, kuring aya uleman pesta ti Raja di peuntas walungan. Tapi kuring era sabab teu boga tanduk. Njeun meunang teu nginjeumkeun tanduk anjeun sakeudeung? Engke ku kuring diinjeumkeun panon kuring nu seukeut!"</p>
+          <p>Munding nu polos tur bageur nampi tawaran eta. Maranehna tukeuran panon jeung tanduk. Munding ayeuna bisa nempo alam kalawan jelas, sarta Oray Totog ngarasa gagah pake tanduk.</p>
+          <p>Tapi sanggeus pesta beres, Oray Totog ngarasa resep pisan boga tanduk. Manehna kabur tur teu nyaluyuan janji pikeun ngabalikeun tanduk Munding. Munding ngadieu ngarasa ditipu sarta sedih pisan.</p>
+          <p>Matak nepi ka ayeuna, Munding sok disada *"Gooog... Goooog..."* nyalukan Oray Totog pikeun ngabalikeun tandukna, sarta panon munding tetep lamur bari Oray Totog nyumput dina jukut.</p>
+        `
+      },
+      'sasakala-2': {
+        title: "Sasakala Pare",
+        type: "Sasakala",
+        content: `
+          <p>Dina jaman baheula di karajaan Kahyangan, Batara Guru ngarasa watir ka manusa di bumi nu sering kalaparan sabab henteu boga dahareun nu tetep.</p>
+          <p>Dewi Sri, dewi kasuburan jeung tatanen nu ngagambarkeun kawelasan, rela ngorbankeun dirina pikeun kasjahteraan manusa. Nalika Dewi Sri wafat, ti kuburanana timbul rupa-rupa tanduran nu mangfaat pisan pikeun manusa.</p>
+          <p>Ti bagian sirahna tumuwuh kelapa, ti panonna tumuwuh jagong, sarta ti awakna tumuwuh tanduran jukut nu ngahasilkeun bulir-bulir emas nu ayeuna disebut **Pare (Padi)**.</p>
+          <p>Masyarakat Sunda ngajaga tur ngahormat pisan ka Dewi Sri ngaliwatan tradisi melak pare sarta Upacara Seren Taun salaku wujud syukur ka Nu Maha Kawasa atas berkah pangan nu ditarima.</p>
+        `
+      },
+      'mite-1': {
+        title: "Nyi Roro Kidul",
+        type: "Mite",
+        content: `
+          <p>Kacaritakeun di Karajaan Pakuan Pajajaran, aya hiji putri karajaan nu geulis kabina-bina namina Putri Kadita. Ku sabab kageulisanana, seueur selir karajaan nu sirik sarta ngirimkeun guna-guna mangrupa panyakit kulit nu bau tur parna ka Putri Kadita.</p>
+          <p>Raja sarta sakabeh karaton sedih, tapi ku sabab desakan para selir, Putri Kadita kapaksa diasingkeun ti karaton. Putri Kadita leumpang ngulon nepi ka tepi Laut Kidul.</p>
+          <p>Dina kasedihanana, Putri Kadita ngadenge pituduh gaib pikeun ngajeburkeun anjeun ka jero ombak Laut Kidul. Saenggeus ngajebur, sacara ajaib panyakit kulitna leungit sarta kageulisanana balik deui batan baheula.</p>
+          <p>Kuantaran teu hayang balik deui ka dunya karaton nu pinuh dengkian, Putri Kadita milih netep sarta ngajadi penguasa gaib Laut Kidul nu dipikawenang ku sebutan **Kanjeng Ratu Kidul / Nyi Roro Kidul**.</p>
+        `
+      },
+      'mite-2': {
+        title: "Sanekala",
+        type: "Mite",
+        content: `
+          <p>Masyarakat Sunda baheula percaya pisan kana ayana **Waktu Sanekala** atawa waktu layung (serop/sareupna) nalika panonpoé mimiti surup tur warna langit robah jadi oranye semu beureum.</p>
+          <p>Sanekala dipercaya salaku waktu parobahan antara dunya manusa jeung dunya makhluk halus. Kolot-kolot jaman baheula ngalarang barudak leutik ulin di luar imah nalika Sanekala datang.</p>
+          <p>Aya kapercayaan yen barudak nu masih ulin di luar imah dina waktu ieu bakal diculik atawa disumputkeun ku makhluk gaib saperti Kelong Wewe. Kulantaran eta, unggal waktu Sanekala, barudak diarahkeun asup ka imah, beberes, sarta nyiapkeun diri pikeun ngaji atawa sholat di langgar/mesjid.</p>
+        `
+      },
+      'sage-1': {
+        title: "Prabu Siliwangi",
+        type: "Sage",
+        content: `
+          <p>Prabu Siliwangi nyaéta raja agung ti Karajaan Sunda Galuh tur Pakuan Pajajaran nu kacida wibawa, wicaksana, sarta dipikacinta ku sakabeh rakyatna. Dina pamarentahanana, karajaan Pajajaran ngahontal jaman kajayaan nu kacida makmur.</p>
+          <p>Salian ti wijaksana, Prabu Siliwangi ge dipikawenang boga kesaktian anu luhur pisan sarta dibarengan ku sakti macan putih nu satia ngabaturanna.</p>
+          <p>Nalika jaman robah sarta tekanan ti sagala arah datang, Prabu Siliwangi teu hayang ningali rakyatna saling perang atawa ngarasa sangsara. Manehna milih ngalakukeun *Ngahyang* (moksah/ngaleungit sacara gaib) di leuweung Sancang kalawan ninggalkeun Uga/Wasiat pikeun anak cucu Sunda sangkan tetep ngajaga silih asih, silih asah, jeung silih asuh.</p>
+        `
+      },
+      'sage-2': {
+        title: "Kean Santang",
+        type: "Sage",
+        content: `
+          <p>Raden Kean Santang nyaéta putra ti Prabu Siliwangi ti Karajaan Pajajaran. Ti leutik, Kean Santang dipikawenang ku kasaktianana nu taya tandingna. Teu aya hiji oge ksatria di pulo Jawa nu sanggup ngalahkeun manehna dalah getihna teu pernah ragrag ka taneuh.</p>
+          <p>Kulantaran ngarasa bosan teu pernah ngarasa éléh, Kean Santang meunang petunjuk pikeun indit ka tanah Arab nempo hiji tokoh nu namina Sayyidina Ali R.A.</p>
+          <p>Sadatengna di tanah Arab, Kean Santang diuji ku Sayyidina Ali pikeun nyabut tongkat nu ditancepkeun dina keusik. Sanajan geus ngaluarkeun sakabeh tenaga jeung kasaktianana, Kean Santang teu sanggup nyabut tongkat eta nepi ka awakna ngaluarkeun getih.</p>
+          <p>Ku kajadian eta, Kean Santang sadar yen masih aya kakuatan nu leuwih agung nyaeta Nu Maha Kawasa. Manehna tuluy ngagem agama Islam sarta balik ka tanah Sunda pikeun nyebarkeun ajaran agama kalawan damai.</p>
+        `
+      }
+    };
+
+    // --- STATE MANAGEMENT ---
+    let studentData = {
+      name: '',
+      className: '',
+      absentNum: ''
+    };
+
+    let selectedStoryKey = 'fabel-1';
+    let currentFontSize = 18; // px base font size
+
+    // --- NAVIGATION LOGIC ---
+    function navigateToStep(stepId) {
+      const steps = document.querySelectorAll('.page-step');
+      steps.forEach(step => {
+        step.classList.remove('active');
+      });
+
+      const target = document.getElementById(stepId);
+      if (target) {
+        target.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // Step 1 Form Handler
+    function handleIdentitySubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('input-name').value.trim();
+      const className = document.getElementById('input-class').value.trim();
+      const absentNum = document.getElementById('input-absent').value.trim();
+
+      if (!name || !className || !absentNum) {
+        showToast('Mangga eusian sadaya data diri!', 'error');
+        return;
+      }
+
+      studentData = { name, className, absentNum };
+
+      // Update Header Badge
+      document.getElementById('badge-student-name').innerText = name;
+      document.getElementById('badge-student-class').innerText = className;
+      document.getElementById('header-student-badge').classList.remove('hidden');
+      document.getElementById('header-student-badge').classList.add('flex');
+
+      // Update Greeting in Tepas
+      document.getElementById('tepas-student-name').innerText = name;
+      document.getElementById('tepas-student-class').innerText = `${className} (No. ${absentNum})`;
+
+      showToast('Data diri hasil disimpen!');
+      navigateToStep('step-cover');
+    }
+
+    // Step 3 Select Story Handler
+    function selectStory(key) {
+      if (!STORIES_DATABASE[key]) {
+        showToast('Dongeng teu kapanggih!', 'error');
+        return;
+      }
+
+      selectedStoryKey = key;
+      const story = STORIES_DATABASE[key];
+
+      document.getElementById('story-badge-type').innerText = story.type;
+      document.getElementById('story-display-title').innerText = story.title;
+      document.getElementById('story-body-content').innerHTML = story.content;
+
+      navigateToStep('step-story');
+    }
+
+    // Adjust Story Font Size
+    function changeFontSize(delta) {
+      currentFontSize = Math.max(14, Math.min(26, currentFontSize + delta));
+      const content = document.getElementById('story-body-content');
+      content.style.fontSize = `${currentFontSize}px`;
+    }
+
+    // Toast Notification Utility
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-message');
+      const toastIcon = document.getElementById('toast-icon');
+
+      toastMsg.innerText = message;
+
+      if (type === 'error') {
+        toastIcon.className = "fa-solid fa-circle-exclamation text-rose-400 text-lg";
+      } else {
+        toastIcon.className = "fa-solid fa-circle-check text-emerald-400 text-lg";
+      }
+
+      toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-[-20px]');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-[-20px]');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
